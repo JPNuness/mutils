@@ -1,0 +1,15 @@
+{
+	"name": "@mutils/core-utils",
+	"version": "0.0.1",
+	"description": "Set of TypeScript-based core utility functions.",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "pnpm build",
+		"clean": "rimraf dist",
+		"clean:full": "rimraf dist node_modules"
+	},
+	"files": [
+		"dist"
+	]
+}

@@ -1,0 +1,26 @@
+{
+	"name": "mutils",
+	"version": "0.0.1",
+	"private": true,
+	"packageManager": "pnpm@10.4.1",
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"build:core": "pnpm run build --filter @mutils/core-utils",
+		"build:vue": "pnpm run build --filter @mutils/vue-utils",
+		"clean:all": "pnpm --recursive run clean",
+		"format": "prettier --write \"packages/**/*.{ts,tsx,json}\" *.json",
+		"format:check": "prettier --check packages/**/*.{ts,tsx,json} *.json",
+		"lint": "eslint \"packages/**/*.{ts,tsx,js,jsx}\"",
+		"lint:fix": "eslint --fix \"packages/**/*.{ts,tsx,js,jsx}\""
+	},
+	"devDependencies": {
+		"eslint": "^9.21.0",
+		"eslint-config-prettier": "^10.0.1",
+		"eslint-plugin-prettier": "^5.2.3",
+		"prettier": "^3.5.1",
+		"rimraf": "^6.0.1",
+		"typescript": "^5.7.3"
+	}
+}
