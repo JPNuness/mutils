@@ -10,20 +10,32 @@
 		"build:core": "pnpm --filter @mutils/core-utils run build",
 		"build:vue": "pnpm --filter @mutils/vue-utils run build",
 		"clean:all": "pnpm --recursive run clean",
-		"format": "prettier --write \"packages/**/*.{ts,tsx,json}\" *.json *.ts",
-		"format:check": "prettier --check packages/**/*.{ts,tsx,json} *.json *.ts",
+		"format": "prettier --write packages/**/*.{ts,tsx,json} ./*.json ./*.ts ./*.mjs",
+		"format:check": "prettier --check packages/**/*.{ts,tsx,json} ./*.json ./*.ts ./*.mjs",
 		"lint": "eslint \"packages/**/*.{ts,tsx,js,jsx}\"",
 		"lint:fix": "eslint --fix \"packages/**/*.{ts,tsx,js,jsx}\""
 	},
 	"devDependencies": {
+		"@eslint/js": "^9.21.0",
+		"@typescript-eslint/eslint-plugin": "^8.24.1",
+		"@typescript-eslint/parser": "^8.24.1",
 		"@vitest/coverage-v8": "^3.0.6",
 		"eslint": "^9.21.0",
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-prettier": "^5.2.3",
+		"globals": "^16.0.0",
 		"prettier": "^3.5.1",
 		"rimraf": "^6.0.1",
 		"typescript": "^5.7.3",
 		"vite": "^6.1.1",
 		"vitest": "^3.0.6"
+	},
+	"pnpm": {
+		"ignoredBuiltDependencies": [
+			"esbuild"
+		],
+		"onlyBuiltDependencies": [
+			"esbuild"
+		]
 	}
 }
