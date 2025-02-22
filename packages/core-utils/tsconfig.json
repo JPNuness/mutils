@@ -3,7 +3,7 @@
 		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "Node",
-		"rootDir": "./",
+		"rootDir": "./src",
 		"outDir": "./dist",
 		"strict": true,
 		"noImplicitAny": true,
@@ -20,6 +20,10 @@
 		"declarationMap": true,
 		"resolveJsonModule": true,
 		"allowSyntheticDefaultImports": true,
-		"sourceMap": true
-	}
+		"sourceMap": true,
+
+		"types": ["vitest/globals"]
+	},
+	"include": ["./src"],
+	"exclude": ["**/tests", "./dist"]
 }
