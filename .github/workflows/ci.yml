@@ -8,11 +8,9 @@ concurrency: # Cancel in-progress pipelines on pull request update
   cancel-in-progress: true
 
 jobs:
-  setup:
-    name: Setup Environment
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
-    outputs:
-      cache-hit: ${{ steps.cache-pnpm.outputs.cache-hit }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -41,35 +39,74 @@ jobs:
         if: steps.cache-pnpm.outputs.cache-hit != 'true'
         run: pnpm install
 
-  lint:
-    name: Run ESLint
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Run ESLint
         run: pnpm lint
 
   test:
-    name: Run Tests
+    name: Test
     runs-on: ubuntu-latest
-    needs: setup
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: '10.x'
+          run_install: false
+
+      - name: Cache pnpm dependencies
+        id: cache-pnpm
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-${{ runner.os }}-
+
+      - name: Install dependencies
+        if: steps.cache-pnpm.outputs.cache-hit != 'true'
+        run: pnpm install
 
       - name: Run Tests
         run: pnpm test
 
   build:
-    name: Build Project
+    name: Build
     runs-on: ubuntu-latest
     needs: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build Project
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: '10.x'
+          run_install: false
+
+      - name: Cache pnpm dependencies
+        id: cache-pnpm
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-${{ runner.os }}-
+
+      - name: Install dependencies
+        if: steps.cache-pnpm.outputs.cache-hit != 'true'
+        run: pnpm install
+
+      - name: Build
         run: pnpm build
