@@ -19,6 +19,12 @@ export default [
 	},
 	js.configs.recommended,
 	{
+		files: ['**/*.mjs'],
+		rules: {
+		  "no-undef": "off"
+		}
+	},
+	{
 		files: ['**/*.ts', '**/*.tsx'],
 		languageOptions: {
 			parser: tsParser,
