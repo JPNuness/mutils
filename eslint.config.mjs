@@ -15,14 +15,14 @@ const __dirname = path.dirname(__filename)
 
 export default [
 	{
-		ignores: ['**/node_modules', '**/dist'],
+		ignores: ['**/node_modules', '**/dist']
 	},
 	js.configs.recommended,
 	{
 		files: ['**/*.mjs'],
 		rules: {
-			'no-undef': 'off',
-		},
+			'no-undef': 'off'
+		}
 	},
 	{
 		files: ['**/*.ts', '**/*.tsx'],
@@ -32,23 +32,24 @@ export default [
 				sourceType: 'module',
 				tsconfigRootDir: __dirname,
 				project: [
+					'./tsconfig.json',
 					'./packages/core-utils/tsconfig.json',
-					'./packages/vue-utils/tsconfig.json',
-				],
+					'./packages/vue-utils/tsconfig.json'
+				]
 			},
 			globals: {
-				...globals.node,
-			},
+				...globals.node
+			}
 		},
 		plugins: {
 			'@typescript-eslint': tsPlugin,
-			prettier: eslintPluginPrettier,
+			prettier: eslintPluginPrettier
 		},
 		rules: {
 			...tsPlugin.configs['recommended-type-checked'].rules,
 			// Let Prettier handle format checks
-			'prettier/prettier': ['error', prettierOptions],
-		},
+			'prettier/prettier': ['error', prettierOptions]
+		}
 	},
-	prettierConfig,
+	prettierConfig
 ]

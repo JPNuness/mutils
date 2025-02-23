@@ -39,7 +39,6 @@ function createInstance<T extends object>(source: NonNullable<T>): T {
 /**
  * Determines whether a source property should be kept during a merge, based on priority rules.
  *
- *
  * @param {unknown} sourceProperty - The property from the source object.
  * @param {boolean | undefined} priorityRule - A flag indicating if the source property should take precedence over the target.
  * @returns {boolean} `true` if the source property should be kept, otherwise `false`.
@@ -52,22 +51,6 @@ function createInstance<T extends object>(source: NonNullable<T>): T {
  */
 function keepSource(sourceProperty: unknown, priorityRule: boolean | undefined): boolean {
 	return isDefined(sourceProperty) && isDefined(priorityRule) && (priorityRule as boolean)
-}
-
-/**
- * Checks if a value is a non-null object (but not an array).
- * @param {*} source - The value to check.
- * @returns {boolean} True if the value is an object, false otherwise.
- *
- * @example
- * const object = { id: 1, name: 'John Doe' }
- * console.log(isObject(object)) // true
- *
- * const nonObject = [0: '1', 1: 'John Doe']
- * console.log(isObject(nonObject)) // false
- */
-export function isObject(source: unknown): boolean {
-	return isDefined(source) && typeof source === 'object' && !Array.isArray(source)
 }
 
 /**
@@ -84,6 +67,22 @@ export function isObject(source: unknown): boolean {
  */
 export function isDefined(source: unknown): boolean {
 	return source !== undefined && source !== null
+}
+
+/**
+ * Checks if a value is a non-null object (but not an array).
+ * @param {*} source - The value to check.
+ * @returns {boolean} True if the value is an object, false otherwise.
+ *
+ * @example
+ * const object = { id: 1, name: 'John Doe' }
+ * console.log(isObject(object)) // true
+ *
+ * const nonObject = ['1', 'John Doe']
+ * console.log(isObject(nonObject)) // false
+ */
+export function isObject(source: unknown): boolean {
+	return isDefined(source) && typeof source === 'object' && !Array.isArray(source)
 }
 
 /**
@@ -112,7 +111,7 @@ export function shallowCopy<T extends object>(source: NonNullable<T>): T {
  * @returns {T} A fully independent deep copy of the source object.
  *
  * @example
- * const obj = { name: "John Doe", details: { age: 30 }, date: new Date(), friends: [0: 'Mary', 1: 'Joe'] };
+ * const obj = { name: "John Doe", details: { age: 30 }, date: new Date(), friends: ['Mary', 'Joe'] };
  * const copy = deepCopy(obj)
  * console.log(copy.details.age) // 30
  * console.log(copy.date instanceof Date) // true
@@ -127,7 +126,7 @@ export function shallowCopy<T extends object>(source: NonNullable<T>): T {
  */
 export function deepCopy<T extends object>(
 	source: T,
-	seenSources: WeakMap<object, unknown> = new WeakMap(),
+	seenSources: WeakMap<object, unknown> = new WeakMap()
 ): T {
 	if (!isObject(source)) return source
 
@@ -172,13 +171,13 @@ export function deepCopy<T extends object>(
 export function merge<T extends object>(
 	target: NonNullable<T>,
 	source: T = createInstance(target),
-	priorityRules: Record<string, boolean> = {},
+	priorityRules: Record<string, boolean> = {}
 ): T {
 	const merged = createInstance(target)
 
 	const mergedKeys = new Set([
 		...(Object.keys(source) as (keyof T)[]),
-		...(Object.keys(target) as (keyof T)[]),
+		...(Object.keys(target) as (keyof T)[])
 	])
 
 	for (const key of mergedKeys) {

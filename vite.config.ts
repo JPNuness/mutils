@@ -5,8 +5,9 @@ export default defineConfig({
 	test: {
 		globals: true,
 		coverage: {
-			reporter: ['text', 'json', 'html'],
+			provider: 'v8',
+			reporter: ['text', 'json', 'html']
 		},
-		exclude: [...configDefaults.exclude, 'packages/**/dist/**'],
-	},
+		exclude: [...configDefaults.exclude, 'packages/**/dist/**']
+	}
 })

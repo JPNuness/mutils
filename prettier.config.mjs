@@ -4,8 +4,8 @@ const prettierOptions = {
 	useTabs: true,
 	semi: false,
 	singleQuote: true,
-	trailingComma: 'all',
-	bracketSpacing: true,
+	trailingComma: 'none',
+	bracketSpacing: true
 }
 
 export default prettierOptions
