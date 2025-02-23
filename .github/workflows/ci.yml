@@ -26,28 +26,20 @@ jobs:
           version: '10.x'
           run_install: false
 
-      - name: Verify PNPM Cache Directory
-        run: |
-          PNPM_STORE_PATH="$( pnpm store path --silent )"
-          if [ ! -d "$PNPM_STORE_PATH" ]; then
-            echo "PNPM store directory does not exist, creating it."
-            mkdir -p "$PNPM_STORE_PATH"
-          else
-            echo "PNPM store directory exists."
-          fi
+      # - name: Verify PNPM Cache Directory
+      #   run: |
+      #     PNPM_STORE_PATH="$( pnpm store path --silent )"
+      #     if [ ! -d "$PNPM_STORE_PATH" ]; then
+      #       echo "PNPM store directory does not exist, creating it."
+      #       mkdir -p "$PNPM_STORE_PATH"
+      #     else
+      #       echo "PNPM store directory exists."
+      #     fi
 
-      - name: Setup package manager cache
+      - name: Setup pnpm cache
         uses: actions/setup-node@v4
         with:
           cache: 'pnpm'
-      # - name: Cache pnpm dependencies
-      #   id: cache-pnpm
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: ~/.pnpm-store
-      #     key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-      #     restore-keys: |
-      #       pnpm-${{ runner.os }}-
 
       - name: Install dependencies
         run: pnpm install
@@ -73,28 +65,20 @@ jobs:
           version: '10.x'
           run_install: false
 
-      - name: Verify PNPM Cache Directory
-        run: |
-          PNPM_STORE_PATH="$( pnpm store path --silent )"
-          if [ ! -d "$PNPM_STORE_PATH" ]; then
-            echo "PNPM store directory does not exist, creating it."
-            mkdir -p "$PNPM_STORE_PATH"
-          else
-            echo "PNPM store directory exists."
-          fi
+      # - name: Verify PNPM Cache Directory
+      #   run: |
+      #     PNPM_STORE_PATH="$( pnpm store path --silent )"
+      #     if [ ! -d "$PNPM_STORE_PATH" ]; then
+      #       echo "PNPM store directory does not exist, creating it."
+      #       mkdir -p "$PNPM_STORE_PATH"
+      #     else
+      #       echo "PNPM store directory exists."
+      #     fi
 
-      - name: Setup package manager cache
+      - name: Setup pnpm cache
         uses: actions/setup-node@v4
         with:
           cache: 'pnpm'
-      # - name: Cache pnpm dependencies
-      #   id: cache-pnpm
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: ~/.pnpm-store
-      #     key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-      #     restore-keys: |
-      #       pnpm-${{ runner.os }}-
 
       - name: Install dependencies
         run: pnpm install
@@ -121,28 +105,20 @@ jobs:
           version: '10.x'
           run_install: false
 
-      - name: Verify PNPM Cache Directory
-        run: |
-          PNPM_STORE_PATH="$( pnpm store path --silent )"
-          if [ ! -d "$PNPM_STORE_PATH" ]; then
-            echo "PNPM store directory does not exist, creating it."
-            mkdir -p "$PNPM_STORE_PATH"
-          else
-            echo "PNPM store directory exists."
-          fi
+      # - name: Verify PNPM Cache Directory
+      #   run: |
+      #     PNPM_STORE_PATH="$( pnpm store path --silent )"
+      #     if [ ! -d "$PNPM_STORE_PATH" ]; then
+      #       echo "PNPM store directory does not exist, creating it."
+      #       mkdir -p "$PNPM_STORE_PATH"
+      #     else
+      #       echo "PNPM store directory exists."
+      #     fi
 
-      - name: Setup package manager cache
+      - name: Setup pnpm cache
         uses: actions/setup-node@v4
         with:
           cache: 'pnpm'
-      # - name: Cache pnpm dependencies
-      #   id: cache-pnpm
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: ~/.pnpm-store
-      #     key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-      #     restore-keys: |
-      #       pnpm-${{ runner.os }}-
 
       - name: Install dependencies
         run: pnpm install
