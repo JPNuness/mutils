@@ -74,7 +74,7 @@ jobs:
         run: pnpm install
 
       - name: Run Tests
-        run: pnpm test --if-present
+        run: pnpm test --passWithNoTests
 
   build:
     name: Build
