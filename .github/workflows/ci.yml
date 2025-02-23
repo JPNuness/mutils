@@ -36,7 +36,6 @@ jobs:
             pnpm-${{ runner.os }}-
 
       - name: Install dependencies
-        if: steps.cache-pnpm.outputs.cache-hit != 'true'
         run: pnpm install
 
       - name: Run ESLint
@@ -70,7 +69,6 @@ jobs:
             pnpm-${{ runner.os }}-
 
       - name: Install dependencies
-        if: steps.cache-pnpm.outputs.cache-hit != 'true'
         run: pnpm install
 
       - name: Run Tests
@@ -105,7 +103,6 @@ jobs:
             pnpm-${{ runner.os }}-
 
       - name: Install dependencies
-        if: steps.cache-pnpm.outputs.cache-hit != 'true'
         run: pnpm install
 
       - name: Build
