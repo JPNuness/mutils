@@ -1,8 +1,8 @@
 name: CI Pipeline
 
 on:
-  push
-  pull_request
+  push:
+  pull_request:
 
 jobs:
   lint:
@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-          check-latest: true
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm i
@@ -36,7 +36,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-          check-latest: true
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm i
@@ -56,7 +56,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-          check-latest: true
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm i
