@@ -26,16 +26,6 @@ jobs:
           version: '10.x'
           run_install: false
 
-      # - name: Verify PNPM Cache Directory
-      #   run: |
-      #     PNPM_STORE_PATH="$( pnpm store path --silent )"
-      #     if [ ! -d "$PNPM_STORE_PATH" ]; then
-      #       echo "PNPM store directory does not exist, creating it."
-      #       mkdir -p "$PNPM_STORE_PATH"
-      #     else
-      #       echo "PNPM store directory exists."
-      #     fi
-
       - name: Setup pnpm cache
         uses: actions/setup-node@v4
         with:
@@ -64,16 +54,6 @@ jobs:
         with:
           version: '10.x'
           run_install: false
-
-      # - name: Verify PNPM Cache Directory
-      #   run: |
-      #     PNPM_STORE_PATH="$( pnpm store path --silent )"
-      #     if [ ! -d "$PNPM_STORE_PATH" ]; then
-      #       echo "PNPM store directory does not exist, creating it."
-      #       mkdir -p "$PNPM_STORE_PATH"
-      #     else
-      #       echo "PNPM store directory exists."
-      #     fi
 
       - name: Setup pnpm cache
         uses: actions/setup-node@v4
@@ -104,16 +84,6 @@ jobs:
         with:
           version: '10.x'
           run_install: false
-
-      # - name: Verify PNPM Cache Directory
-      #   run: |
-      #     PNPM_STORE_PATH="$( pnpm store path --silent )"
-      #     if [ ! -d "$PNPM_STORE_PATH" ]; then
-      #       echo "PNPM store directory does not exist, creating it."
-      #       mkdir -p "$PNPM_STORE_PATH"
-      #     else
-      #       echo "PNPM store directory exists."
-      #     fi
 
       - name: Setup pnpm cache
         uses: actions/setup-node@v4
