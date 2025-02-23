@@ -36,14 +36,18 @@ jobs:
             echo "PNPM store directory exists."
           fi
 
-      - name: Cache pnpm dependencies
-        id: cache-pnpm
-        uses: actions/cache@v4
+      - name: Setup package manager cache
+        uses: actions/setup-node@v4
         with:
-          path: ~/.pnpm-store
-          key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            pnpm-${{ runner.os }}-
+          cache: 'pnpm'
+      # - name: Cache pnpm dependencies
+      #   id: cache-pnpm
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.pnpm-store
+      #     key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      #     restore-keys: |
+      #       pnpm-${{ runner.os }}-
 
       - name: Install dependencies
         run: pnpm install
@@ -79,14 +83,18 @@ jobs:
             echo "PNPM store directory exists."
           fi
 
-      - name: Cache pnpm dependencies
-        id: cache-pnpm
-        uses: actions/cache@v4
+      - name: Setup package manager cache
+        uses: actions/setup-node@v4
         with:
-          path: ~/.pnpm-store
-          key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            pnpm-${{ runner.os }}-
+          cache: 'pnpm'
+      # - name: Cache pnpm dependencies
+      #   id: cache-pnpm
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.pnpm-store
+      #     key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      #     restore-keys: |
+      #       pnpm-${{ runner.os }}-
 
       - name: Install dependencies
         run: pnpm install
@@ -123,14 +131,18 @@ jobs:
             echo "PNPM store directory exists."
           fi
 
-      - name: Cache pnpm dependencies
-        id: cache-pnpm
-        uses: actions/cache@v4
+      - name: Setup package manager cache
+        uses: actions/setup-node@v4
         with:
-          path: ~/.pnpm-store
-          key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            pnpm-${{ runner.os }}-
+          cache: 'pnpm'
+      # - name: Cache pnpm dependencies
+      #   id: cache-pnpm
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.pnpm-store
+      #     key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      #     restore-keys: |
+      #       pnpm-${{ runner.os }}-
 
       - name: Install dependencies
         run: pnpm install
