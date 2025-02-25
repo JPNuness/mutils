@@ -4,29 +4,6 @@ import * as obj from '../object'
 //test data
 import { object, classObject } from './testdata'
 
-describe('isDefined', () => {
-	it('detects undefined or null', () => {
-		// null
-		expect(obj.isDefined(object.wife)).toBe(false)
-		// undefined
-		expect(obj.isDefined(object.pet)).toBe(false)
-	})
-	it('detects defined objects', () => {
-		// String
-		expect(obj.isDefined(object.name)).toBe(true)
-		// Object
-		expect(obj.isDefined(object)).toBe(true)
-		// Number
-		expect(obj.isDefined(object.age)).toBe(true)
-		// Array
-		expect(obj.isDefined(object.friends)).toBe(true)
-		// Function
-		expect(obj.isDefined(object.checkAge)).toBe(true)
-		// Symbol
-		expect(obj.isDefined(object.id)).toBe(true)
-	})
-})
-
 describe('isObject', () => {
 	it('identifies objects', () => {
 		// Object
@@ -35,6 +12,8 @@ describe('isObject', () => {
 		expect(obj.isObject(object.name)).toBe(false)
 		// Number
 		expect(obj.isObject(object.age)).toBe(false)
+		// BigInt
+		expect(obj.isObject(object.bankId)).toBe(false)
 		// Array
 		expect(obj.isObject(object.friends)).toBe(false)
 		// Function

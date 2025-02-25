@@ -1,3 +1,6 @@
+import { isArray } from '../array/array'
+import { isDefined } from '../common/common'
+
 /**
  * Retrieves the prototype of an object. Defaults to `Object.prototype`
  *
@@ -52,23 +55,6 @@ function createInstance<T extends object>(source: NonNullable<T>): T {
 function keepSource(sourceProperty: unknown, priorityRule: boolean | undefined): boolean {
 	return isDefined(sourceProperty) && isDefined(priorityRule) && (priorityRule as boolean)
 }
-
-/**
- * Checks if a value is neither null or undefined.
- * @param {*} source - The value to check.
- * @returns {boolean} True if the value is defined, false otherwise.
- *
- * @example
- * const object = { id: 1, name: 'John Doe' }
- * console.log(isDefined(object)) // true
- *
- * const nonObject = null
- * console.log(isDefined(nonObject)) // false
- */
-export function isDefined(source: unknown): boolean {
-	return source !== undefined && source !== null
-}
-
 /**
  * Checks if a value is a non-null object (but not an array).
  * @param {*} source - The value to check.
@@ -103,7 +89,8 @@ export function shallowCopy<T extends object>(source: NonNullable<T>): T {
 }
 
 /**
- * Creates a deep copy of an object.
+ * Creates a deep copy of an object. Handles primitives, dates, arrays and objects.
+ * Is to be expanded in the future with other types (Regexp, Maps, Sets, ...)
  *
  * @template T - The type of the object to be copied.
  * @param {T} source - The object to deep copy.
@@ -128,7 +115,9 @@ export function deepCopy<T extends object>(
 	source: T,
 	seenSources: WeakMap<object, unknown> = new WeakMap()
 ): T {
-	if (!isObject(source)) return source
+	const isCopyable: boolean = !(isObject(source) || isArray(source))
+
+	if (isCopyable) return source
 
 	// Dates
 	if (source instanceof Date) return new Date(source.getTime()) as T

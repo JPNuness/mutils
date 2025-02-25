@@ -1,6 +1,7 @@
 export class Person {
 	name: string
 	age: number
+	bankId: bigint
 	friends: string[]
 	id: symbol
 	wife: null
@@ -10,6 +11,7 @@ export class Person {
 	constructor(name: string, age: number, friends: string[]) {
 		this.name = name
 		this.age = age
+		this.bankId = BigInt(9007199254740991)
 		this.friends = friends
 		this.id = Symbol('identifier')
 		this.wife = null
@@ -25,6 +27,7 @@ export class Person {
 export const object = {
 	name: 'John',
 	age: 30,
+	bankId: BigInt(9007199254740991),
 	friends: ['Emily', 'Joe'],
 	checkAge: () => {
 		return object.age
