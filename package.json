@@ -17,7 +17,7 @@
 		"lint": "eslint \"packages/**/*.{ts,tsx}\"",
 		"lint:fix": "eslint --fix \"packages/**/*.{ts,tsx}\"",
 		"prepare": "husky",
-		"test": "pnpm vitest",
+		"test": "pnpm vitest --reporter=verbose",
 		"test:coverage": "pnpm vitest --coverage",
 		"test:core": "pnpm -F @mutils/core-utils vitest",
 		"test:vue": "pnpm -F @mutils/vue-utils vitest"
