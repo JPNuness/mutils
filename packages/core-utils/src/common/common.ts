@@ -37,7 +37,9 @@ export function isPrimitive(source: unknown): boolean {
 
 /**
  * Checks if a value is of a given class.
- * Use class definitions for custom classes, and strings for native ones
+ * Use class definitions for custom classes and strings for native ones.
+ *
+ * @see {@link isObject} for a stricter check specifically for objects.
  *
  * @template T - The expected class.
  * @param {object} source - The value to check.
