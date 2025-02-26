@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest'
-// functions
 import * as com from '../common'
 
 describe('isDefined', () => {
@@ -15,37 +14,6 @@ describe('isDefined', () => {
 		expect(com.isDefined([1, 2, 3])).toBe(true)
 		expect(com.isDefined(() => {})).toBe(true)
 		expect(com.isDefined(Symbol('symbol'))).toBe(true)
-	})
-})
-
-describe('isEmpty', () => {
-	it('considers non-collection types empty', () => {
-		expect(com.isEmpty(123)).toBe(true)
-		expect(com.isEmpty(BigInt(9007199254740991))).toBe(true)
-		expect(
-			com.isEmpty(() => {
-				return
-			})
-		).toBe(true)
-		expect(com.isEmpty(Symbol('symbol'))).toBe(true)
-	})
-	it('works on null values', () => {
-		expect(com.isEmpty(null)).toBe(true)
-	})
-	it('works on undefined values', () => {
-		expect(com.isEmpty(undefined)).toBe(true)
-	})
-	it('works on strings', () => {
-		expect(com.isEmpty('')).toBe(true)
-		expect(com.isEmpty('Emily')).toBe(false)
-	})
-	it('works on arrays', () => {
-		expect(com.isEmpty([])).toBe(true)
-		expect(com.isEmpty([1, 2, 3])).toBe(false)
-	})
-	it('works on objects', () => {
-		expect(com.isEmpty({})).toBe(true)
-		expect(com.isEmpty({ name: 'Emily' })).toBe(false)
 	})
 })
 
@@ -86,5 +54,56 @@ describe('is', () => {
 		expect(com.is(john, 'Person')).toBe(false)
 		expect(com.is({}, Person)).toBe(false)
 		expect(com.is(john, Person)).toBe(true)
+	})
+})
+
+describe('isPrimitive', () => {
+	it('identifies primitive types', () => {
+		expect(com.isPrimitive('')).toBe(true)
+		expect(com.isPrimitive(1)).toBe(true)
+		expect(com.isPrimitive(BigInt(9007199254740991))).toBe(true)
+		expect(com.isPrimitive(Symbol('symbol'))).toBe(true)
+		expect(com.isPrimitive(undefined)).toBe(true)
+		expect(com.isPrimitive(null)).toBe(true)
+	})
+	it('identifies not-primitive types', () => {
+		expect(com.isPrimitive([])).toBe(false)
+		expect(com.isPrimitive(new Date())).toBe(false)
+		expect(com.isPrimitive(new Map())).toBe(false)
+		expect(com.isPrimitive(new Set())).toBe(false)
+		expect(com.isPrimitive(() => {})).toBe(false)
+		expect(com.isPrimitive({})).toBe(false)
+	})
+})
+
+describe('isEmpty', () => {
+	it('considers non-collection types empty', () => {
+		expect(com.isEmpty(123)).toBe(true)
+		expect(com.isEmpty(BigInt(9007199254740991))).toBe(true)
+		expect(com.isEmpty(() => {})).toBe(true)
+		expect(com.isEmpty(Symbol('symbol'))).toBe(true)
+	})
+	it('handles null values', () => {
+		expect(com.isEmpty(null)).toBe(true)
+	})
+	it('handles undefined values', () => {
+		expect(com.isEmpty(undefined)).toBe(true)
+	})
+	it('handles strings', () => {
+		expect(com.isEmpty('')).toBe(true)
+		expect(com.isEmpty('Emily')).toBe(false)
+	})
+	it('handles arrays', () => {
+		expect(com.isEmpty([])).toBe(true)
+		expect(com.isEmpty([1, 2, 3])).toBe(false)
+	})
+	it('handles objects', () => {
+		expect(com.isEmpty({})).toBe(true)
+		expect(com.isEmpty({ name: 'Emily' })).toBe(false)
+	})
+	it('handles custom class objects', () => {
+		class Person {}
+		const john = new Person()
+		expect(com.isEmpty(john)).toBe(true)
 	})
 })

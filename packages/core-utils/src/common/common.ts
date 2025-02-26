@@ -1,14 +1,7 @@
 import { isArray } from '../array/array'
 import { isObject } from '../object/object'
 
-enum Primitives {
-	STRING = 'string',
-	NUMBER = 'number',
-	BIGINT = 'bigint',
-	BOOLEAN = 'boolean',
-	SYMBOL = 'symbol',
-	UNDEFINED = 'undefined'
-}
+const Primitives = new Set(['string', 'number', 'bigint', 'boolean', 'symbol', 'undefined'])
 
 /**
  * Checks if a value is neither null or undefined.
@@ -39,7 +32,7 @@ export function isDefined(source: unknown): boolean {
  * console.log(isPrimitive(nonObject)) // true
  */
 export function isPrimitive(source: unknown): boolean {
-	return source === null || (typeof source) in Primitives
+	return source === null || Primitives.has(typeof source)
 }
 
 /**

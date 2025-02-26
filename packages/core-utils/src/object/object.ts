@@ -2,60 +2,6 @@ import { isArray } from '../array/array'
 import { isDefined } from '../common/common'
 
 /**
- * Retrieves the prototype of an object. Defaults to `Object.prototype`
- *
- * @template T - The object type.
- * @param {T} source - The object whose prototype should be retrieved.
- * @returns {object} The prototype of the provided object.
- *
- * @example
- * const obj = { name: "Alice" }
- * const proto = getPrototype(obj)
- * console.log(proto === Object.prototype) // true
- */
-function getPrototype<T extends object>(source: T): object {
-	const prototype = Object.getPrototypeOf(source) as object
-	return prototype ?? Object.prototype
-}
-
-/**
- * Creates a new instance of an object while preserving its prototype.
- *
- * @template T - The object type.
- * @param {NonNullable<T>} source - The object to create an instance from.
- * @returns {T} A new instance of the object with the same prototype.
- *
- * @example
- * class Person {
- *   constructor(public name: string) {}
- * }
- * const original = new Person("Emily")
- * const copy = createInstance(original)
- *
- * console.log(Object.getPrototypeOf(copy) === Object.getPrototypeOf(original))
- * // Output: true
- */
-function createInstance<T extends object>(source: NonNullable<T>): T {
-	return Object.create(getPrototype(source)) as T
-}
-
-/**
- * Determines whether a source property should be kept during a merge, based on priority rules.
- *
- * @param {unknown} sourceProperty - The property from the source object.
- * @param {boolean | undefined} priorityRule - A flag indicating if the source property should take precedence over the target.
- * @returns {boolean} `true` if the source property should be kept, otherwise `false`.
- *
- * @example
- * keepSource("name", true);  // true (source is defined, priority is true)
- * keepSource("name", false); // false (priority is false)
- * keepSource(undefined, true); // false (source is undefined)
- * keepSource("name", undefined); // false (priority is undefined)
- */
-function keepSource(sourceProperty: unknown, priorityRule: boolean | undefined): boolean {
-	return isDefined(sourceProperty) && isDefined(priorityRule) && (priorityRule as boolean)
-}
-/**
  * Checks if a value is a non-null object (but not an array).
  * @param {*} source - The value to check.
  * @returns {boolean} True if the value is an object, false otherwise.
@@ -84,13 +30,13 @@ export function isObject(source: unknown): boolean {
  * const copy = shallowCopy(original)
  * console.log(copy) // { id: 1, name: 'Alice' }
  */
-export function shallowCopy<T extends object>(source: NonNullable<T>): T {
-	return Object.assign({}, source)
+export function cloneObject<T extends object>(source: NonNullable<T>): T {
+	return Object.assign(createInstance(source), source)
 }
 
 /**
  * Creates a deep copy of an object. Handles primitives, dates, arrays and objects.
- * Is to be expanded in the future with other types (Regexp, Maps, Sets, ...)
+ * Will be expanded with other types (Regexp, Maps, Sets, ...)
  *
  * @template T - The type of the object to be copied.
  * @param {T} source - The object to deep copy.
@@ -111,7 +57,7 @@ export function shallowCopy<T extends object>(source: NonNullable<T>): T {
  * const clonedCircular = deepCopy(circular)
  * console.log(clonedCircular.self === clonedCircular) // true
  */
-export function deepCopy<T extends object>(
+export function deepClone<T extends object>(
 	source: T,
 	seenSources: WeakMap<object, unknown> = new WeakMap()
 ): T {
@@ -129,8 +75,8 @@ export function deepCopy<T extends object>(
 	const clone: T = Array.isArray(source) ? ([] as T) : createInstance(source)
 	seenSources.set(source, clone)
 
-	for (const key of Object.keys(source) as (keyof T)[]) {
-		;(clone as Record<keyof T, unknown>)[key] = deepCopy(source[key] as T, seenSources)
+	for (const key of Object.getOwnPropertyNames(source) as (keyof T)[]) {
+		;(clone as Record<keyof T, unknown>)[key] = deepClone(source[key] as T, seenSources)
 	}
 
 	return clone
@@ -186,4 +132,59 @@ export function merge<T extends object>(
 	}
 
 	return merged
+}
+
+/**
+ * Retrieves the prototype of an object. Defaults to `Object.prototype`
+ *
+ * @template T - The object type.
+ * @param {T} source - The object whose prototype should be retrieved.
+ * @returns {object} The prototype of the provided object.
+ *
+ * @example
+ * const obj = { name: "Alice" }
+ * const proto = getPrototype(obj)
+ * console.log(proto === Object.prototype) // true
+ */
+function getPrototype<T extends object>(source: T): object {
+	const prototype = Object.getPrototypeOf(source) as object
+	return prototype ?? Object.prototype
+}
+
+/**
+ * Creates a new instance of an object while preserving its prototype.
+ *
+ * @template T - The object type.
+ * @param {NonNullable<T>} source - The object to create an instance from.
+ * @returns {T} A new instance of the object with the same prototype.
+ *
+ * @example
+ * class Person {
+ *   constructor(public name: string) {}
+ * }
+ * const original = new Person("Emily")
+ * const copy = createInstance(original)
+ *
+ * console.log(Object.getPrototypeOf(copy) === Object.getPrototypeOf(original))
+ * // Output: true
+ */
+function createInstance<T extends object>(source: NonNullable<T>): T {
+	return Object.create(getPrototype(source)) as T
+}
+
+/**
+ * Determines whether a source property should be kept during a merge, based on priority rules.
+ *
+ * @param {unknown} sourceProperty - The property from the source object.
+ * @param {boolean | undefined} priorityRule - A flag indicating if the source property should take precedence over the target.
+ * @returns {boolean} `true` if the source property should be kept, otherwise `false`.
+ *
+ * @example
+ * keepSource("name", true);  // true (source is defined, priority is true)
+ * keepSource("name", false); // false (priority is false)
+ * keepSource(undefined, true); // false (source is undefined)
+ * keepSource("name", undefined); // false (priority is undefined)
+ */
+function keepSource(sourceProperty: unknown, priorityRule: boolean | undefined): boolean {
+	return isDefined(sourceProperty) && isDefined(priorityRule) && (priorityRule as boolean)
 }
