@@ -135,20 +135,20 @@ export function merge<T extends object>(
 }
 
 /**
- * Retrieves the prototype of an object. Defaults to `Object.prototype`
+ * Determines whether a source property should be kept during a merge, based on priority rules.
  *
- * @template T - The object type.
- * @param {T} source - The object whose prototype should be retrieved.
- * @returns {object} The prototype of the provided object.
+ * @param {unknown} sourceProperty - The property from the source object.
+ * @param {boolean | undefined} priorityRule - A flag indicating if the source property should take precedence over the target.
+ * @returns {boolean} `true` if the source property should be kept, otherwise `false`.
  *
  * @example
- * const obj = { name: "Alice" }
- * const proto = getPrototype(obj)
- * console.log(proto === Object.prototype) // true
+ * keepSource("name", true);  // true (source is defined, priority is true)
+ * keepSource("name", false); // false (priority is false)
+ * keepSource(undefined, true); // false (source is undefined)
+ * keepSource("name", undefined); // false (priority is undefined)
  */
-function getPrototype<T extends object>(source: T): object {
-	const prototype = Object.getPrototypeOf(source) as object
-	return prototype ?? Object.prototype
+function keepSource(sourceProperty: unknown, priorityRule: boolean | undefined): boolean {
+	return isDefined(sourceProperty) && isDefined(priorityRule) && (priorityRule as boolean)
 }
 
 /**
@@ -168,23 +168,24 @@ function getPrototype<T extends object>(source: T): object {
  * console.log(Object.getPrototypeOf(copy) === Object.getPrototypeOf(original))
  * // Output: true
  */
-function createInstance<T extends object>(source: NonNullable<T>): T {
+export function createInstance<T extends object>(source: NonNullable<T>): T {
 	return Object.create(getPrototype(source)) as T
 }
 
 /**
- * Determines whether a source property should be kept during a merge, based on priority rules.
+ * Retrieves the prototype of an object. Defaults to `Object.prototype`
  *
- * @param {unknown} sourceProperty - The property from the source object.
- * @param {boolean | undefined} priorityRule - A flag indicating if the source property should take precedence over the target.
- * @returns {boolean} `true` if the source property should be kept, otherwise `false`.
+ * @template T - The object type.
+ * @param {T} source - The object whose prototype should be retrieved.
+ * @returns {object} The prototype of the provided object.
  *
  * @example
- * keepSource("name", true);  // true (source is defined, priority is true)
- * keepSource("name", false); // false (priority is false)
- * keepSource(undefined, true); // false (source is undefined)
- * keepSource("name", undefined); // false (priority is undefined)
+ * const obj = { name: "Alice" }
+ * const proto = getPrototype(obj)
+ * console.log(proto === Object.prototype) // true
  */
-function keepSource(sourceProperty: unknown, priorityRule: boolean | undefined): boolean {
-	return isDefined(sourceProperty) && isDefined(priorityRule) && (priorityRule as boolean)
+export function getPrototype<T extends object>(source: T | null): object {
+	if (source === null) return Object.prototype
+
+	return Object.getPrototypeOf(source) as object
 }

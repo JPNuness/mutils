@@ -173,3 +173,59 @@ describe('deepClone', () => {
 		expect(Object.getOwnPropertyNames(source)).toEqual(Object.getOwnPropertyNames(copy))
 	})
 })
+
+describe('createInstance', () => {
+	it('keeps the source prototype', () => {
+		class Person {}
+		const john = new Person()
+		const newJohn = obj.createInstance(john)
+
+		expect(Object.getPrototypeOf(newJohn)).toEqual(Person.prototype)
+	})
+
+	it('keeps the source class', () => {
+		class Person {}
+		const john = new Person()
+		const newJohn = obj.createInstance(john)
+
+		expect(newJohn instanceof Person).toBe(true)
+	})
+
+	it('handles plain objects', () => {
+		const o = {}
+		const newO = obj.createInstance(o)
+
+		expect(newO instanceof Object).toBe(true)
+		expect(Object.getPrototypeOf(newO)).toEqual(Object.prototype)
+	})
+
+	it('handles arrays', () => {
+		const a = [1, 2, 3]
+		const newA = obj.createInstance(a)
+
+		expect(newA instanceof Array).toBe(true)
+		expect(Object.getPrototypeOf(newA)).toEqual(Array.prototype)
+	})
+})
+
+describe('getPrototype', () => {
+	it('handles plain objects', () => {
+		expect(obj.getPrototype({})).toEqual(Object.prototype)
+	})
+
+	it('handles custom class objects', () => {
+		class Person {
+			greeting: string
+
+			constructor(name: string) {
+				this.greeting = `Hi! My name is ${name}`
+			}
+		}
+
+		expect(obj.getPrototype(new Person('Slim Shady'))).toEqual(Person.prototype)
+	})
+
+	it('handles null instances', () => {
+		expect(obj.getPrototype(null)).toEqual(Object.prototype)
+	})
+})
