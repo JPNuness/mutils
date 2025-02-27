@@ -15,6 +15,11 @@ describe('isDefined', () => {
 		expect(com.isDefined(() => {})).toBe(true)
 		expect(com.isDefined(Symbol('symbol'))).toBe(true)
 	})
+	it('detects falsy but defined objects', () => {
+		expect(com.isDefined('')).toBe(true)
+		expect(com.isDefined(false)).toBe(true)
+		expect(com.isDefined(0)).toBe(true)
+	})
 })
 
 describe('is', () => {

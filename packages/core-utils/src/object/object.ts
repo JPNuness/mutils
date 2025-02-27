@@ -1,5 +1,6 @@
 import { isArray } from '../array/array'
 import { isDefined } from '../common/common'
+import { keepSource } from './object.internal'
 
 /**
  * Checks if a value is a non-null object (but not an array).
@@ -90,7 +91,7 @@ export function deepClone<T extends object>(
  *
  * @template T - The type of the object to be merged.
  * @param {NonNullable<T>} target - The target object, which serves as the base.
- * @param {T} [source] - The source object, providing new properties. Defaults to an empty instance of `target`.
+ * @param {T} [source] - The source object, providing new properties. Defaults to an empty instance of the `target` class.
  * @param {Record<string, boolean>} [priorityRules] - A map defining which properties should keep its `source` value (`true`) over the `target` value (`false`).
  * @returns {T} The merged object.
  *
@@ -103,52 +104,44 @@ export function deepClone<T extends object>(
  * console.log(result)
  * // Output: { name: "Emily", age: 35, details: { city: "Paris", country: "France" } }
  */
-export function merge<T extends object>(
-	target: NonNullable<T>,
-	source: T = createInstance(target),
+export function merge(
+	target: Record<string, unknown>,
+	source: Record<string, unknown> = createInstance(target),
 	priorityRules: Record<string, boolean> = {}
-): T {
+): Record<string, unknown> {
 	const merged = createInstance(target)
 
 	const mergedKeys = new Set([
-		...(Object.keys(source) as (keyof T)[]),
-		...(Object.keys(target) as (keyof T)[])
+		...Object.getOwnPropertyNames(source),
+		...Object.getOwnPropertyNames(target)
 	])
 
 	for (const key of mergedKeys) {
-		const targetProperty = target[key] as T
-		const sourceProperty = source[key] as T
-		const keepSourceProp = keepSource(sourceProperty, priorityRules[key])
+		const targetProperty = target[key]
+		const sourceProperty = source[key]
+
+		const keepSourceProp = keepSource(targetProperty, priorityRules[key])
 
 		if (isObject(targetProperty) && isObject(sourceProperty)) {
-			;(merged as Record<keyof T, unknown>)[key] = keepSourceProp
-				? merge(sourceProperty, targetProperty)
-				: merge(targetProperty, sourceProperty)
+			merged[key] = keepSourceProp
+				? merge(
+						sourceProperty as Record<string, unknown>,
+						targetProperty as Record<string, unknown>
+					)
+				: merge(
+						targetProperty as Record<string, unknown>,
+						sourceProperty as Record<string, unknown>
+					)
 
 			continue
 		}
 
-		merged[key] = keepSourceProp ? source[key] : target[key]
+		merged[key] = keepSourceProp
+			? deepClone(sourceProperty as object)
+			: deepClone(targetProperty as object)
 	}
 
 	return merged
-}
-
-/**
- * Determines whether a source property should be kept during a merge, based on priority rules.
- *
- * @param {unknown} sourceProperty - The property from the source object.
- * @param {boolean | undefined} priorityRule - A flag indicating if the source property should take precedence over the target.
- * @returns {boolean} `true` if the source property should be kept, otherwise `false`.
- *
- * @example
- * keepSource("name", true);  // true (source is defined, priority is true)
- * keepSource("name", false); // false (priority is false)
- * keepSource(undefined, true); // false (source is undefined)
- * keepSource("name", undefined); // false (priority is undefined)
- */
-function keepSource(sourceProperty: unknown, priorityRule: boolean | undefined): boolean {
-	return isDefined(sourceProperty) && isDefined(priorityRule) && (priorityRule as boolean)
 }
 
 /**
