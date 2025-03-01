@@ -5,7 +5,7 @@ const Primitives = new Set(['string', 'number', 'bigint', 'boolean', 'symbol', '
 
 /**
  * Checks if a value is neither null or undefined.
- * @param {*} source - The value to check.
+ * @param {unknown} source - The value to check.
  * @returns {boolean} True if the value is defined, false otherwise.
  *
  * @example
@@ -21,7 +21,7 @@ export function isDefined(source: unknown): boolean {
 
 /**
  * Checks if a value is of a primitive type.
- * @param {*} source - The value to check.
+ * @param {unknown} source - The value to check.
  * @returns {boolean} True if the value is a primitive, false otherwise.
  *
  * @example
@@ -42,8 +42,8 @@ export function isPrimitive(source: unknown): boolean {
  * @see {@link isObject} for a stricter check specifically for objects.
  *
  * @template T - The expected class.
- * @param {object} source - The value to check.
- * @param {(new (...args: unknown[]) => T) | string} cls - The class to compare against.
+ * @param {unknown} source - The value to check.
+ * @param {(new (...args: Array<never>) => T) | string} cls - The class to compare against.
  * @returns {boolean} - `true` if `source` is an instance/type of `cls`, otherwise `false`.
  *
  * @example
@@ -57,10 +57,7 @@ export function isPrimitive(source: unknown): boolean {
  * console.log(is(john, 'String')); // true
  * console.log(is(1, 'String'));   // false
  */
-export function is<T>(
-	source: unknown,
-	cls: (new (...args: unknown[]) => T) | string | FunctionConstructor | SetConstructor
-): boolean {
+export function is<T>(source: unknown, cls: (new (...args: Array<never>) => T) | string): boolean {
 	if (typeof cls === 'string') {
 		const sourceClass = Object.prototype.toString.call(source).slice(8, -1)
 		return sourceClass === cls
@@ -71,7 +68,7 @@ export function is<T>(
 
 /**
  * Checks if a value is empty.
- * @param {object} source - The value to check.
+ * @param {unknown} source - The value to check.
  * @returns {boolean} True if the value is empty or not a collection, false otherwise.
  *
  * @example
@@ -94,4 +91,20 @@ export function isEmpty(source: unknown): boolean {
 	}
 
 	return true
+}
+
+/**
+ * Checks if a value is falsy.
+ * @param {object} source - The value to check.
+ * @returns {boolean} True if the value will return false in a condition, false otherwise.
+ *
+ * @example
+ * const object = { id: 1, name: 'John Doe' }
+ * console.log(isFalsy(object)) // false
+ *
+ * const string = ''
+ * console.log(isFalsy(string)) // true
+ */
+export function isFalsy(source: unknown): boolean {
+	return !(source as boolean)
 }
