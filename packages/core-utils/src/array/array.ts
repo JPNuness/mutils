@@ -31,12 +31,29 @@ export function isArray(source: unknown): boolean {
  */
 export function filter<T>(source: Array<T>, fn: (elem: T, idx: number) => boolean): Array<T> {
 	const result = []
+	let currentIdx = -1
 
-	for (var idx = 0; idx < source.length; idx++) {
-		if (fn(source[idx], idx)) result.push(source[idx])
+	while (++currentIdx < source.length) {
+		if (fn(source[currentIdx], currentIdx)) result.push(source[currentIdx])
 	}
 
 	return result
+}
+
+export function findIndex<T>(source: Array<T>, fn: (elem: T, idx: number) => boolean): number {
+	let currentIdx = -1
+
+	while (++currentIdx < source.length) {
+		if (fn(source[currentIdx], currentIdx)) return currentIdx
+	}
+
+	return -1
+}
+
+export function find<T>(source: Array<T>, fn: (elem: T, idx: number) => boolean): T | undefined {
+	const idx = findIndex(source, fn)
+
+	return idx === -1 ? undefined : source[idx]
 }
 
 /**
