@@ -53,8 +53,14 @@ describe('is', () => {
 		expect(com.is(null, 'Object')).toBe(false)
 	})
 	it('identifies user classes', () => {
-		class Person {}
-		const john = new Person()
+		class Person {
+			age: number
+
+			constructor(age: number) {
+				this.age = age
+			}
+		}
+		const john = new Person(25)
 
 		expect(com.is(john, 'Person')).toBe(false)
 		expect(com.is({}, Person)).toBe(false)
@@ -110,5 +116,31 @@ describe('isEmpty', () => {
 		class Person {}
 		const john = new Person()
 		expect(com.isEmpty(john)).toBe(true)
+	})
+})
+
+describe('isFalsy', () => {
+	it('handles nullish values', () => {
+		expect(com.isFalsy(null)).toBe(true)
+		expect(com.isFalsy(undefined)).toBe(true)
+	})
+	it('handles NaN', () => {
+		expect(com.isFalsy(NaN)).toBe(true)
+	})
+	it('handles strings', () => {
+		expect(com.isFalsy('')).toBe(true)
+		expect(com.isFalsy('Emily')).toBe(false)
+	})
+	it('handles numbers', () => {
+		expect(com.isFalsy(0)).toBe(true)
+		expect(com.isFalsy(1)).toBe(false)
+	})
+	it('handles BigInts', () => {
+		expect(com.isFalsy(BigInt(0))).toBe(true)
+		expect(com.isFalsy(BigInt(1))).toBe(false)
+	})
+	it('handles booleans', () => {
+		expect(com.isFalsy(false)).toBe(true)
+		expect(com.isFalsy(true)).toBe(false)
 	})
 })

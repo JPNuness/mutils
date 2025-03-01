@@ -4,7 +4,7 @@ import { keepSource } from './object.internal'
 
 /**
  * Checks if a value is a non-null object (but not an array).
- * @param {*} source - The value to check.
+ * @param {unknown} source - The value to check.
  * @returns {boolean} True if the value is an object, false otherwise.
  *
  * @example
@@ -90,10 +90,10 @@ export function deepClone<T extends object>(
  * - If a property exists in only one object, that value is retained.
  *
  * @template T - The type of the object to be merged.
- * @param {NonNullable<T>} target - The target object, which serves as the base.
- * @param {T} [source] - The source object, providing new properties. Defaults to an empty instance of the `target` class.
- * @param {Record<string, boolean>} [priorityRules] - A map defining which properties should keep its `source` value (`true`) over the `target` value (`false`).
- * @returns {T} The merged object.
+ * @param {Record<string, unknown>} target - The target object, which serves as the base.
+ * @param {Record<string, unknown>} source - The source object, providing new properties. Defaults to an empty instance of the `target` class.
+ * @param {Record<string, boolean>} priorityRules - A map defining which properties should keep its `source` value (`true`) over the `target` value (`false`).
+ * @returns {Record<string, unknown>} The merged object.
  *
  * @example
  * const target = { name: "Emily", age: 30, details: { city: "Paris" } }
