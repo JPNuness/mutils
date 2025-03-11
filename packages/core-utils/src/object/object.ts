@@ -73,7 +73,7 @@ export function deepClone<T extends object>(
 	if (seenSources.has(source)) return seenSources.get(source) as T
 
 	// Arrays and objects
-	const clone: T = Array.isArray(source) ? ([] as T) : createInstance(source)
+	const clone: T = isArray(source) ? ([] as T) : createInstance(source)
 	seenSources.set(source, clone)
 
 	for (const key of Object.getOwnPropertyNames(source) as (keyof T)[]) {
@@ -90,7 +90,7 @@ export function deepClone<T extends object>(
  * @template T - The type of the objects to be checked for equality.
  * @param {T} target - The first object to compare.
  * @param {T} source - The second object to compare.
- * @param {WeakMap<T, T>} [seenPairs=new WeakMap()] - A map to track objects already compared, used to prevent cyclic references.
+ * @param {WeakMap<object, unknown>} [seenPairs=new WeakMap()] - A map to track objects already compared, used to prevent cyclic references.
  *
  * @returns {boolean} `true` if the objects are deeply equal, `false` otherwise.
  *
@@ -109,24 +109,22 @@ export function deepClone<T extends object>(
  * cyclicObj.b = cyclicObj
  * console.log(deepEqual(cyclicObj, cyclicObj)) // true
  */
-export function deepEqual<T extends object>(
+export function deepEquals<T extends object>(
 	target: T,
 	source: T,
-	seenPairs: WeakMap<T, T> = new WeakMap()
+	seenPairs: WeakMap<object, unknown> = new WeakMap()
 ): boolean {
 	// Same reference
-	if (target === source) return true
-
-	// Cyclic references
-	if (seenPairs.has(target) && seenPairs.get(target) === source) return true
-	if (seenPairs.has(source) && seenPairs.get(source) === target) return true
-
-	seenPairs.set(target, source)
-	seenPairs.set(source, target)
+	const isComparable: boolean = !(isObject(source) || isArray(source))
+	if (isComparable) return target === source
 
 	// Dates
 	if (target instanceof Date && source instanceof Date)
 		return target.getTime() === source.getTime()
+
+	// Cyclic references
+	if (seenPairs.has(target) && seenPairs.get(target) === source) return true
+	seenPairs.set(target, source)
 
 	// Arrays and Objects
 	const targetKeys = Object.getOwnPropertyNames(target) as (keyof T)[]
@@ -135,7 +133,7 @@ export function deepEqual<T extends object>(
 	if (targetKeys.length !== sourceKeys.length) return false
 
 	for (const key of targetKeys) {
-		if (!deepEqual(target[key] as T, source[key] as T, seenPairs)) return false
+		if (!deepEquals(target[key] as T, source[key] as T, seenPairs)) return false
 	}
 
 	return true
