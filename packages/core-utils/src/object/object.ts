@@ -73,7 +73,7 @@ export function deepClone<T extends object>(
 	if (seenSources.has(source)) return seenSources.get(source) as T
 
 	// Arrays and objects
-	const clone: T = Array.isArray(source) ? ([] as T) : createInstance(source)
+	const clone: T = isArray(source) ? ([] as T) : createInstance(source)
 	seenSources.set(source, clone)
 
 	for (const key of Object.getOwnPropertyNames(source) as (keyof T)[]) {
@@ -81,6 +81,62 @@ export function deepClone<T extends object>(
 	}
 
 	return clone
+}
+
+/**
+ * Compares two objects deeply for equality. Handles primitives, dates, arrays, and objects.
+ * Will be expanded with other types (Regexp, Maps, Sets, ...)
+ *
+ * @template T - The type of the objects to be checked for equality.
+ * @param {T} target - The first object to compare.
+ * @param {T} source - The second object to compare.
+ * @param {WeakMap<object, unknown>} [seenPairs=new WeakMap()] - A map to track objects already compared, used to prevent cyclic references.
+ *
+ * @returns {boolean} `true` if the objects are deeply equal, `false` otherwise.
+ *
+ * @example
+ * const obj1 = { id: 1, data: { value: 10 } }
+ * const obj2 = { id: 1, data: { value: 10 } }
+ * console.log(deepEqual(obj1, obj2)) // true
+ *
+ * @example
+ * const date1 = new Date()
+ * const date2 = new Date(date1.getTime())
+ * console.log(deepEqual(date1, date2)) // true
+ *
+ * @example
+ * const cyclicObj = { a: 1 }
+ * cyclicObj.b = cyclicObj
+ * console.log(deepEqual(cyclicObj, cyclicObj)) // true
+ */
+export function deepEquals<T extends object>(
+	target: T,
+	source: T,
+	seenPairs: WeakMap<object, unknown> = new WeakMap()
+): boolean {
+	// Same reference
+	const isComparable: boolean = !(isObject(source) || isArray(source))
+	if (isComparable) return target === source
+
+	// Dates
+	if (target instanceof Date && source instanceof Date)
+		return target.getTime() === source.getTime()
+
+	// Cyclic references
+	if (seenPairs.has(target) && seenPairs.get(target) === source) return true
+	seenPairs.set(target, source)
+
+	// Arrays and Objects
+	const targetKeys = Object.getOwnPropertyNames(target) as (keyof T)[]
+	const sourceKeys = Object.getOwnPropertyNames(source) as (keyof T)[]
+
+	if (targetKeys.length !== sourceKeys.length) return false
+
+	for (const key of targetKeys) {
+		if (!deepEquals(target[key] as T, source[key] as T, seenPairs)) return false
+	}
+
+	return true
 }
 
 /**

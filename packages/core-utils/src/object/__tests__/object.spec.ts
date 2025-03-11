@@ -142,7 +142,7 @@ describe('deepClone', () => {
 	})
 	it('handles dates', () => {
 		const source = { a: new Date() }
-		const copy = obj.cloneObject(source)
+		const copy = obj.deepClone(source)
 
 		expect(copy.a).toEqual(source.a)
 		expect(copy === source).toBe(false)
@@ -158,6 +158,103 @@ describe('deepClone', () => {
 
 		expect(Object.keys(source)).not.toEqual(Object.getOwnPropertyNames(source))
 		expect(Object.getOwnPropertyNames(source)).toEqual(Object.getOwnPropertyNames(copy))
+	})
+})
+
+describe('deepEquals', () => {
+	it('identifies equal objects', () => {
+		const source = { a: 'a', b: 123, c: true }
+		const copy = { a: 'a', b: 123, c: true }
+		const nonCopy = { a: 'a', b: 123, c: false }
+
+		expect(obj.deepEquals(source, copy)).toBe(true)
+		expect(obj.deepEquals(source, nonCopy)).toBe(false)
+	})
+	it('handles comparable types', () => {
+		const sourceStr = 'a' as unknown as object
+		const copyStr = 'a' as unknown as object
+		const sourceNr = 1 as unknown as object
+		const copyNr = 1 as unknown as object
+
+		expect(obj.deepEquals(sourceStr, copyStr)).toBe(true)
+		expect(obj.deepEquals(sourceNr, copyNr)).toBe(true)
+	})
+	it('handles custom classes', () => {
+		class Person {
+			age: number
+
+			constructor(age: number) {
+				this.age = age
+			}
+		}
+		const john = new Person(23)
+		const copy = new Person(23)
+
+		expect(obj.deepEquals(john, copy)).toBe(true)
+	})
+	it('handles arrays', () => {
+		const source = { array: [1, 2, 3] }
+		const copy = { array: [1, 2, 3] }
+		const nonCopy = { array: [1, 2, 3, 4] }
+
+		expect(obj.deepEquals(source, copy)).toBe(true)
+		expect(obj.deepEquals(source, nonCopy)).toBe(false)
+	})
+	it('handles nested objects', () => {
+		const source = { nested: { a: 'a' } }
+		const copy = { nested: { a: 'a' } }
+
+		expect(obj.deepEquals(source, copy)).toBe(true)
+	})
+	it('handles nested arrays', () => {
+		const source = { nested: { a: [{ ab: 'ab' }, { ac: 'ac' }] } }
+		const copy = { nested: { a: [{ ab: 'ab' }, { ac: 'ac' }] } }
+		const nonCopy = { nested: { a: [{ aa: 'ab' }, { ac: 'ac' }] } }
+
+		expect(obj.deepEquals(source, copy)).toBe(true)
+		expect(obj.deepEquals(source, nonCopy as object)).toBe(false)
+	})
+	it('handles cyclic references in the same object', () => {
+		class Cycle {
+			self: Cycle
+			selfOfSelf: Cycle
+
+			constructor() {
+				this.self = this
+				this.selfOfSelf = this.self.self
+			}
+		}
+		const source = new Cycle()
+		const copy = source.self
+		const selfCopy = source.selfOfSelf
+
+		expect(obj.deepEquals(source, copy)).toBe(true)
+		expect(obj.deepEquals(copy, selfCopy)).toBe(true)
+	})
+	it('handles cyclic references in different objects', () => {
+		class Cycle {
+			other?: Cycle
+
+			constructor() {
+				this.other = undefined
+			}
+		}
+
+		const a = new Cycle()
+		const b = new Cycle()
+
+		a.other = b
+		b.other = a
+
+		expect(obj.deepEquals(a, b)).toBe(true)
+	})
+	it('handles dates', () => {
+		const source = { a: new Date('05/05/2000') }
+		const copy = { a: new Date('05/05/2000') }
+		const nonCopy = { a: new Date('05/07/2000') }
+
+		expect(obj.deepEquals(source, copy)).toBe(true)
+		expect(obj.deepEquals(source, nonCopy)).toBe(false)
 	})
 })
 

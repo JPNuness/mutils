@@ -5,7 +5,6 @@ import { isDefined } from '../common/common'
  * based on an optional priority rule.
  *
  * @param {unknown} targetProperty - The property from the target object.
- * @param {unknown} sourceProperty - The property from the source object.
  * @param {boolean | undefined} priorityRule - An optional flag that, if defined, indicates whether the source property should take precedence.
  * @returns {boolean} Returns `true` if the source property should be used over the target property, otherwise `false`.
  *
